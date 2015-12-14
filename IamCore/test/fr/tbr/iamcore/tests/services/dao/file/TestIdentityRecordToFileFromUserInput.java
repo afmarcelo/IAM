@@ -1,4 +1,4 @@
-package fr.tbr.iamcore.tests;
+package fr.tbr.iamcore.tests.services.dao.file;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,29 +7,39 @@ import java.util.Scanner;
 
 import fr.tbr.iamcore.datamodel.Identity;
 
-/**
- * 
- * @author tbrou
- *
- */
-public class TestFiles {
+public class TestIdentityRecordToFileFromUserInput {
 	
 	
-	/**
-	 * 
-	 * @param args
-	 * @throws IOException 
-	 */
 	public static void main(String[] args) throws IOException{
 		
-		String pathname = "/tests/iam/my_firt_file.txt";
-		File file = ensureFileExists(pathname);
+		String filePath = "/tests/identities.txt";
+		File file = ensureFileExists(filePath);
 		PrintWriter writer = new PrintWriter(file);
 		
-		writer.println("something");
+		Scanner scanner = new Scanner(System.in);
+		Identity identity = getIdentityFromInput(scanner);
+		Identity identity2 = getIdentityFromInput(scanner);
 		
+		writeIdentityIntoFile(writer, identity);
+	
+		writeIdentityIntoFile(writer, identity2);
+		
+		scanner.close();
 		writer.close();
+		
+		
 	}
+
+
+
+	private static void writeIdentityIntoFile(PrintWriter writer,
+			Identity identity) {
+		writer.println(identity.getDisplayName());
+		writer.println(identity.getEmailAddress());
+		writer.println(identity.getUid());
+	}
+	
+	
 
 	/**
 	 * This method will check that the file exists or create it if it doesn't
@@ -77,6 +87,5 @@ public class TestFiles {
 		
 		return identity;
 	}
-	
 
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The whole file is called a "Document" -->
+
+
+<!-- "identities" is the Root Element -->
+<identities>
+	<!-- identity is an element, "first child" of identities -->
+	<identity>
+		<property name="displayName">Thomas</property>
+		<property name="email">tbr@tbr.com</property>
+		<property name="guid">123456789</property>
+	</identity>
+	
+	<!-- this identity has two "siblings" the previous and the next identities -->
+	<identity>
+		<property name="displayName">Clément</property>
+		<property name="email">cle@tbr.com</property>
+		<property name="guid">987654123</property>
+	</identity>
+	
+	<!-- this is the "last child" of "identities" -->
+	<identity>
+		<!-- this is defining the properties of one identity -->
+		<!-- the name is defining the property name and the -->
+		<!-- value is defined in the "Text Content" -->
+		<property name="displayName">Quentin</property>
+		<property name="email">quen@tbr.com</property>
+		<property name="guid">987456123</property>
+	</identity>
+</identities>

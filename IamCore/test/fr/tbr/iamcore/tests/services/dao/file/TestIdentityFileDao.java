@@ -1,13 +1,13 @@
 /**
  * 
  */
-package fr.tbr.iamcore.tests;
+package fr.tbr.iamcore.tests.services.dao.file;
 
 import java.io.IOException;
 import java.util.List;
 
 import fr.tbr.iamcore.datamodel.Identity;
-import fr.tbr.iamcore.tests.services.dao.IdentityFileDAO;
+import fr.tbr.iamcore.services.dao.IdentityDAO;
 
 
 /**
@@ -15,22 +15,36 @@ import fr.tbr.iamcore.tests.services.dao.IdentityFileDAO;
  *
  */
 public class TestIdentityFileDao {
+	
+	private static IdentityDAO dao;
 
 	/**
 	 * @param args
 	 * @throws IOException 
 	 */
-	public static void main(String[] args) throws IOException {
-		
+	public static void main(String[] args) throws Exception {
+		setUp();
 //		testReadAll();
 //		testSearch();
 		
 		testUpdate();
-
+		tearDown();
+		
+		
 	}
 
+	
+	private static void setUp() throws Exception{
+		dao = new IdentityFileDAO();
+	}
+	
+	private static void tearDown(){
+		IdentityFileDAO identityFileDAO = (IdentityFileDAO) dao;
+		identityFileDAO.close();
+		
+	}
 	private static void testUpdate() throws IOException {
-		IdentityFileDAO dao = new IdentityFileDAO();
+	
 		List<Identity> ids = dao.readAll();
 		System.out.println(ids);
 		Identity foundIdentity = ids.get(0);
@@ -46,7 +60,6 @@ public class TestIdentityFileDao {
 		
 	}
 	private static void testSearch() throws IOException {
-		IdentityFileDAO dao = new IdentityFileDAO();
 		dao.create(new Identity("clement", "clem@clem.com", "789"));
 		
 		Identity criteria = new Identity("cle", "clem@", null);
@@ -62,7 +75,6 @@ public class TestIdentityFileDao {
 	}
 
 	private static void testReadAll() throws IOException {
-		IdentityFileDAO dao = new IdentityFileDAO();
 		dao.create(new Identity("thomas", "tbr@tbr.com","456"));
 		
 		System.out.println(dao.readAll());
