@@ -17,9 +17,7 @@ public class Client_launcher {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
-    	
-        
+  
         try {
         	Client client = new Client();
 			client.connectToServer();
