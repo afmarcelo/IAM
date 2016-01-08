@@ -2,20 +2,13 @@
  * 
  */
 package fr.mfa.iam.services.networking;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 /**
  * @author marcelo
@@ -58,7 +51,6 @@ public class Client {
     	
     	in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     	String message = in.readLine();
-    	System.out.print("prueba");
     	return message;
     	
     }
@@ -71,6 +63,11 @@ public class Client {
     		response = receiveMessage();
     		}
     	return response;
+    }
+    
+    public static void infoBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
     }
 
 }

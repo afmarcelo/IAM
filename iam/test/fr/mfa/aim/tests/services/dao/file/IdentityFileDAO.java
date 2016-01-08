@@ -28,7 +28,7 @@ import fr.mfa.iam.tests.services.match.impl.StartsWithIdentityMatchStrategy;
 public class IdentityFileDAO implements IdentityDAO{
 
 	// TODO change this path, make it configurable
-	private final static String filePath = "/tests/iam/identities.txt";
+	private final static String filePath = "files/identities.txt";
 
 	// Writer to insert identities into the file
 	private PrintWriter writer;

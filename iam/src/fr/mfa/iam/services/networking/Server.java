@@ -8,7 +8,13 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
+import fr.mfa.aim.datamodel.Identity;
+import fr.mfa.aim.tests.services.dao.file.IdentityFileDAO;
+import fr.mfa.iam.services.dao.IdentityDAO;
 /**
  * @author marcelo
  * A server program which accepts requests from clients to
@@ -25,7 +31,8 @@ public class Server {
 	
 	
 private int ServerPort = 9898;
-	
+private static String user = "admin";
+private static String password = "epita01";	
 	/**
      * A private thread to handle requests on a particular
      * socket.
@@ -77,17 +84,22 @@ private int ServerPort = 9898;
                     if (input == null || input.equals("exit")) {
                         break;
                     }
-                    if (input.equals("1")){
-                    	out.println("que uno ni que uno");	
-                    }
+                    
                     //System.out.println(input);
-                    out.println(input);
-                    processRequest(input);
+                    // Process Request from client and write response
+                    //String response = ""+processRequest(input);
+                    //response ="sn"+response;
+                    
+                    out.println(processRequest(input));
+                    // Response to client
+                   // out.println("El server responde");
                 }
                 
             } catch (IOException e) {
                 log("Error handling client# " + clientNumber + ": " + e);
-            } finally {
+            } catch (Exception e) {
+				e.printStackTrace();
+			} finally {
                 try {
                     socket.close();
                 } catch (IOException e) {
@@ -105,25 +117,101 @@ private int ServerPort = 9898;
         private void log(String message) {
         	System.out.println(message);
         }
+        
         private void sendMessage(String message) throws IOException{
         	PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         	out.println(message);
         }
+        
+        
         /*
          * This method process the request. 
          */
         
-        private boolean processRequest(String message){
+		private String processRequest(String message) throws Exception{
+        		
+        	String[] command = message.split("::",-1);
         	
-        	
-        	String[] command = message.split(";",-1);
-        	
-        	log("command: " + command[0]);
-        	log("parametre: " + command[1]);
-			
-        	return false;
-        	
+        	switch(command[0]){
+        		case "auth": 
+        			return authenticate(command[1], command[2]);
+        		case "search":
+        			return searchIdentity(createIdentityFromString(command[1], command[2], command[3]));
+        		case "create":
+        			return createIdentity(command[1], command[2], command[3]);
+        		case "update":
+        			return updateIdentity(command[1], command[2], command[3]);
+        		case "delete":
+        			return deleteIdentity(command[1], command[2], command[3]);
+        		case "readall":	
+        			return readAllIdentities();
+        		default:
+                	return "Invalid Command";
+        	} 	
         }
-        
+        // Authenticate method, check if user and password are the provided for the thread.
+		public String authenticate(String user_tmp, String password_tmp){
+    		if ( user.equals(user_tmp) && password.equals(password_tmp)){
+    			return "OK";
+    		}else{
+    			return "FAIL";
+    		}	
+    	}
+		/**
+		 * The following methods calls the Orginals DAO Methods presented in the interface. 
+		 * 
+		 */
+		
+		public Identity createIdentityFromString(String displayName, String emailAddress, String uid){
+			Identity identity = new Identity(displayName, emailAddress, uid);
+			return identity;
+		}
+		public String searchIdentity(Identity identity) throws Exception{
+			
+			String result="";
+			IdentityDAO dao = new IdentityFileDAO();
+			List<Identity> identities = dao.search(identity);
+			
+			for (int i=0; i< identities.size(); i++){
+				result= result+identities.get(i)+"\n";
+			}
+			return result;
+		}
+		public String createIdentity(String displayName, String emailAddress, String uid) throws Exception{
+			Identity identity = new Identity(displayName, emailAddress, uid);
+			IdentityDAO dao = new IdentityFileDAO();
+			dao.create(identity);
+			return "OK";
+		}
+		public String updateIdentity(String displayName, String emailAddress, String uid) throws Exception{
+			Identity identity = new Identity(displayName, emailAddress, uid);
+			IdentityDAO dao = new IdentityFileDAO();
+			dao.update(identity);
+			return "OK";
+		}
+		public String deleteIdentity(String displayName, String emailAddress, String uid) throws Exception{
+			Identity identity = new Identity(displayName, emailAddress, uid);
+			IdentityDAO dao = new IdentityFileDAO();
+			dao.delete(identity);
+			return "OK";
+		}
+		public String readAllIdentities() throws Exception{
+			String result="";
+			IdentityDAO dao = new IdentityFileDAO();
+			
+			List<Identity> identities = dao.readAll();
+			result = identities.toString();
+			for (int i=0; i< identities.size(); i++){
+			//	result= result+identities.get(i)+"\n";
+			}
+			return result;
+		}
+		
+         
     }
+		
+		
+
+	
 }
+
