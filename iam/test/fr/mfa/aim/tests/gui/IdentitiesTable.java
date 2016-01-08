@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.awt.Component;
 import fr.mfa.aim.tests.gui.SpringUtilities;
 import fr.mfa.iam.services.networking.Client;
@@ -17,10 +18,13 @@ import javax.swing.JButton;
 public class IdentitiesTable extends JPanel implements TableModelListener{
 
 	private JTable table;
+	private MyTableModel model;
     private JTextField filterText;
     private JTextField statusText;
     private TableRowSorter<MyTableModel> sorter;
     protected JButton deleteButton, modifyButton, createButton, exitButton;
+    private int SelectedRow;
+    private String data[][];
     
     public IdentitiesTable() throws IOException {
         super();
@@ -32,9 +36,9 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
         client.connectToServer();
         String data[][]=createDataArray(client.sendCommand("readall"));
         client.disconnectFromServer();
-       
+        
         //Create a table with a sorter.
-        MyTableModel model = new MyTableModel();
+        model = new MyTableModel();
         model.setData(data);
         sorter = new TableRowSorter<MyTableModel>(model);
         table = new JTable(model);
@@ -54,6 +58,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
                         } else {
                             int modelRow = 
                                 table.convertRowIndexToModel(viewRow);
+                            SelectedRow = viewRow;
                             statusText.setText(
                                 String.format("Selected Row in view: %d. " +
                                     "Selected Row in model: %d.", 
@@ -63,9 +68,6 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
                 }
         );
       
-       // table.getCellEditor().addCellEditorListener(table);
-
-
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(table);
 
@@ -77,6 +79,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
         JLabel l1 = new JLabel("Filter Text:", SwingConstants.TRAILING);
         form.add(l1);
         filterText = new JTextField();
+      
         //Whenever filterText changes, invoke newFilter.
         filterText.getDocument().addDocumentListener(
                 new DocumentListener() {
@@ -160,8 +163,24 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
 	 * 
 	 */
 	protected void deleteButtonPressed() {
-		// TODO Auto-generated method stub
-		System.out.println("alguien quiere borrar algo");
+		// Save information from the selected Identity.
+		String displayName = (String) table.getValueAt(SelectedRow, 0);
+		String emailAddress = (String) table.getValueAt(SelectedRow, 1);
+		String uid = (String) table.getValueAt(SelectedRow, 2);
+		//Connect to server and send command
+		
+		try {
+			Client client = new Client();
+			client.connectToServer();
+			client.sendCommand("delete::"+displayName+"::"+emailAddress+"::"+uid);
+			String data[][]=createDataArray(client.sendCommand("readall"));
+			model.setData(data);
+			table.repaint();
+			client.disconnectFromServer();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
 	}
 
 	/** 
@@ -237,7 +256,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
         
         public boolean isCellEditable(int row, int col) {
             //Only 1st and 2nd column are editables.
-            if (col >= 2) {
+            if (col >= 0) {
                 return false;
             } else {
                 return true;
