@@ -200,9 +200,10 @@ private static String password = "epita01";
 			IdentityDAO dao = new IdentityFileDAO();
 			
 			List<Identity> identities = dao.readAll();
-			result = identities.toString();
+			// result = identities.toString();
+			
 			for (int i=0; i< identities.size(); i++){
-			//	result= result+identities.get(i)+"\n";
+				result= result+identities.get(i).getDisplayName()+"::"+identities.get(i).getEmailAddress()+"::"+identities.get(i).getUid()+";;";
 			}
 			return result;
 		}

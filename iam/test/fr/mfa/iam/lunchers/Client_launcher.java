@@ -4,9 +4,15 @@
 package fr.mfa.iam.lunchers;
 import java.io.IOException;
 import javax.swing.JOptionPane;
-
-import javax.swing.JFrame;
 import fr.mfa.iam.services.networking.Client;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @author marcelo
@@ -22,28 +28,24 @@ public class Client_launcher {
         try {
         	Client client = new Client();
 			client.connectToServer();
-			// client.sendMessage("hola server");
-			//client.sendMessage("hola server de nuevo");
-			
-			// System.out.println("message receive it: " + client.receiveMessage());
-			// client.sendMessage("33333");
-			// while (true){
-			// 	System.out.println("message receive it: " + client.receiveMessage());
-			// }
 			
 			// Test Authentication
 			String response="";
-		//	String response = client.sendCommand("auth::admin::epita01");
-		//	infoBox(response,"Server Response");
+		   // response = client.sendCommand("auth::admin::epita02");
+		    //infoBox(response,"Server Response");
 			
-		//	response = client.sendCommand("create::marcelo ardiles::marcelo@hotmail.com::12333");
-		//	infoBox(response,"Server Response");
+		     response = client.sendCommand("create::Kevan 123 ::kevan@hotmail.com::98989898");
+		   	infoBox(response,"Server Response");
 			
 			response = client.sendCommand("readall");
-			infoBox(response,"Server Response");
+			//infoBox(response,"Server Response");
+			//System.out.println(response);
 			
-			String multiline = "prueba\nprueba";
-			infoBox(multiline, "prueba mutiline");
+			
+			//createDataArray(response);
+			
+			//String multiline = "prueba\nprueba";
+			///infoBox(multiline, "prueba mutiline");
 			
 			
 			client.disconnectFromServer();
@@ -51,12 +53,31 @@ public class Client_launcher {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 
 	}
+	
+	private static String[][] createDataArray(String response) {
+		String lines[] = response.split(";;",-1);
+		String data[][] = new String[lines.length][3];
+		for(int i=0; i<lines.length; i++){
+			String fields[] = lines[i].split("::",-1);
+			for(int j=0; j<fields.length; j++){
+				data[i][j]=fields[j];
+			}
+		}
+		return data;
+	}
+	
 	public static void infoBox(String infoMessage, String titleBar)
     {
         JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
     }
+	
+	//  table 
+	
+	
 
 }
+
+
+
