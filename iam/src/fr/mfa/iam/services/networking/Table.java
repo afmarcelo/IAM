@@ -6,6 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.*;
+import javax.swing.table.TableModel;
+
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
@@ -17,38 +20,28 @@ import java.io.IOException;
  *
  */
 @SuppressWarnings("serial")
-public class Table extends JPanel {
+public class Table extends JPanel implements TableModelListener{
 	private boolean DEBUG = false;
 
     public Table() throws IOException {
         super(new GridLayout(1,0));
         
+        
+        // Create client object and connect to the server.
         Client client = new Client();
         client.connectToServer();
-        createDataArray(client.sendCommand("readall"));
-        
-        
-
-        String[] columnNames = {"DisplayName",
-                                "Email",
-                                "UID"};
-
-        Object[][] data = {
-	    {"Kathy", "Smith",
-	     "Snowboarding", new Integer(5), new Boolean(false)},
-	    {"John", "Doe",
-	     "Rowing", new Integer(3), new Boolean(true)},
-	    {"Sue", "Black",
-	     "Knitting", new Integer(2), new Boolean(false)},
-	    {"Jane", "White",
-	     "Speed reading", new Integer(20), new Boolean(true)},
-	    {"Joe", "Brown",
-	     "Pool", new Integer(10), new Boolean(false)}
-        };
-
+      
+        // Set the columnNames in a vector.
+        String[] columnNames = {"DisplayName", "Email", "UID"};
+      
+        // Create the table with the info collected from the server. 
         final JTable table = new JTable(createDataArray(client.sendCommand("readall")), columnNames);
         table.setPreferredScrollableViewportSize(new Dimension(500, 70));
         table.setFillsViewportHeight(true);
+        
+        // create listener for changes detection.
+        table.getModel().addTableModelListener(this);
+        // Disconnect from the server 
         client.disconnectFromServer();
 
         if (DEBUG) {
@@ -118,6 +111,7 @@ public class Table extends JPanel {
         });
     }
 
+    // receive all identities from the server in a single line a create a multi dimentional array need for the creation of the table. 
 	private static String[][] createDataArray(String response) {
 		String lines[] = response.split(";;",-1);
 		String data[][] = new String[lines.length][3];
@@ -130,5 +124,34 @@ public class Table extends JPanel {
 		return data;
 	}
 	
-	
+	// Catch modification event in the table, and throw modification event to the server.  
+	public void tableChanged(TableModelEvent e) {
+        int row = e.getFirstRow();
+        int column = e.getColumn();
+        TableModel model = (TableModel)e.getSource();
+        String columnName = model.getColumnName(column);
+        Object data = model.getValueAt(row, column);
+        
+        try {
+            Client client = new Client();
+        	client.connectToServer();
+			
+			String data_local[][]= createDataArray(client.sendCommand("readall"));
+	        client.sendCommand("update::"+model.getValueAt(row,0)+"::"+model.getValueAt(row,1)+"::"+model.getValueAt(row,2));
+			
+	        System.out.println("modified data: "+ data);
+	        
+	        // 
+	        
+	        client.disconnectFromServer();
+
+
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
+    }
+    
 }
+	
