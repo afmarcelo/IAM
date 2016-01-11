@@ -76,7 +76,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
 
         //Create a separate form for filterText and buttons statusText
         JPanel form = new JPanel(new SpringLayout());
-        JLabel l1 = new JLabel("Filter Text:", SwingConstants.TRAILING);
+        JLabel l1 = new JLabel("Filter Identity:", SwingConstants.TRAILING);
         form.add(l1);
         filterText = new JTextField();
       
@@ -148,15 +148,16 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
      * Call modify selected identity when modifyButton is pressed.
      */
 	protected void modifyButtonPressed() {
-		// TODO Auto-generated method stub
+		UpdateIdentity updateidentity = new UpdateIdentity();
+		updateidentity.createAndShowGUI();
 		
 	}
 	/**
 	 * Call create identity method when createButton is pressed.
 	 */
 	protected void createButtonPressed() {
-		// TODO Auto-generated method stub
-		
+		CreateIdentity createidentity = new CreateIdentity();
+		createidentity.createAndShowGUI();
 	}
 	/**
 	 * Delete selected identity when delete button is pressed.
