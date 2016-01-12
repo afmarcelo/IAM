@@ -35,7 +35,9 @@ public class CreateIdentity extends JPanel{
     protected JButton btnCreate;
     protected JButton btnExit;
     
-    public CreateIdentity(){
+    private boolean isDone=false;
+    
+	public CreateIdentity(){
     	super(new BorderLayout());
         //setUpFormats();
     
@@ -82,6 +84,16 @@ public class CreateIdentity extends JPanel{
 		btnExit.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){exitButtonPressed();}});
     }
 	
+	// Getters and Setters
+	public boolean isDone() {
+		return isDone;
+	}
+
+	public void setDone(boolean isDone) {
+		this.isDone = isDone;
+	}
+
+	
     protected void exitButtonPressed() {
     	Container frame = btnExit.getParent();
         do 
@@ -101,6 +113,7 @@ public class CreateIdentity extends JPanel{
 			client.createIdentity(displayName, emailAddress, uid);
 			client.disconnectFromServer();
 			infoBox(creationSuccesful,"");
+			isDone=true;
 			exitButtonPressed();
 		
 		} catch (UnknownHostException e) {

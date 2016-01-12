@@ -7,9 +7,13 @@ import javax.swing.table.TableRowSorter;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.UnknownHostException;
 import java.awt.Component;
 import java.awt.Container;
@@ -23,11 +27,9 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
 	private JTable table;
 	private MyTableModel model;
     private JTextField filterText;
-    private JTextField statusText;
     private TableRowSorter<MyTableModel> sorter;
-    protected JButton deleteButton, modifyButton, createButton, exitButton;
+    protected JButton deleteButton, modifyButton, createButton, exitButton,refreshButton;
     private int SelectedRow;
-    private String data[][];
     
     public IdentitiesTable() throws IOException {
         super();
@@ -56,23 +58,18 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
                         int viewRow = table.getSelectedRow();
                         if (viewRow < 0) {
                             //Selection got filtered away.
-                            statusText.setText("");
+                           
                         } else {
-                            int modelRow = 
-                                table.convertRowIndexToModel(viewRow);
+                            int modelRow = table.convertRowIndexToModel(viewRow);
                             SelectedRow = viewRow;
-                            statusText.setText(
-                                String.format("Selected Row in view: %d. " +
-                                    "Selected Row in model: %d.", 
-                                    viewRow, modelRow));
                         }
                     }
                 }
         );
-      
+        
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(table);
-
+        
         //Add the scroll pane to this panel.
         add(scrollPane);
 
@@ -83,8 +80,6 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
         filterText = new JTextField();
       
         //Whenever filterText changes, invoke newFilter.
-       
-        
         filterText.getDocument().addDocumentListener(
                 new DocumentListener() {
                     public void changedUpdate(DocumentEvent e) {
@@ -100,19 +95,14 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
         
         l1.setLabelFor(filterText);
         form.add(filterText);
-        JLabel l2 = new JLabel("Status:", SwingConstants.TRAILING);
-        form.add(l2);
-        statusText = new JTextField();
-        
+                
         // Add Create Labels, empty labels are created in order to balance the form layout.
-        l2.setLabelFor(statusText);
-        JLabel l3 = new JLabel();
 		JLabel l4 = new JLabel();
 		JLabel l5 = new JLabel();
 		JLabel l6 = new JLabel();
-		form.add(statusText);
 		
         // Create Buttons
+		refreshButton = new JButton("Refresh Table");
 		createButton = new JButton("Create Identity");
 		deleteButton = new JButton("Delete Selected Identity");
         modifyButton = new JButton("Modify Selected Identity");
@@ -123,9 +113,10 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
 		createButton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){createButtonPressed();}});
 		modifyButton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){modifyButtonPressed();}});
 		exitButton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){exitButtonPressed();}});
+		refreshButton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){refreshButtonPressed();}});
 		
 		// Add Buttons to form
-		form.add(l3);
+		form.add(refreshButton);
 		form.add(createButton);
 		form.add(l4);
 		form.add(modifyButton);
@@ -135,14 +126,18 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
 		form.add(exitButton);
         
         // Define a form layout of 6 rows and 2 columns. 
-        SpringUtilities.makeCompactGrid(form, 6, 2, 6, 6, 6, 6);
+        SpringUtilities.makeCompactGrid(form, 5, 2, 6, 6, 6, 6);
         
         // Add Form
         add(form);
         
     }
     
-    /**
+    protected void refreshButtonPressed() {
+		refreshTable();		
+	}
+
+	/**
      * Exit the application when ExitButton is pressed. 
      */
     protected void exitButtonPressed() {
@@ -154,31 +149,40 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
      */
 	protected void modifyButtonPressed() {
 		// Save information from the selected Identity.
+		
+		if (SelectedRow == 0){
+			infoBox("ERROR: Select one identity", "ERROR");
+		}else{
+		
 		String displayName = (String) table.getValueAt(SelectedRow, 0);
 		String emailAddress = (String) table.getValueAt(SelectedRow, 1);
 		String uid = (String) table.getValueAt(SelectedRow, 2);
 		
-		UpdateIdentity updateidentity = new UpdateIdentity();
+		System.out.println(displayName);
+		System.out.println(emailAddress);
+		System.out.println(uid);
+		
+		UpdateIdentity updateidentity = new UpdateIdentity(displayName, emailAddress, uid);
 		updateidentity.setTxtDisplayNameContent(displayName);
 		updateidentity.setTxtEmailAddressContent(emailAddress);
-		updateidentity.setTxtUidContent(uid);
+		updateidentity.setTxtUidContent(displayName);
 		updateidentity.createAndShowGUI();
-		
+		}
 	}
 	/**
 	 * Call create identity method when createButton is pressed.
 	 */
-	protected void createButtonPressed()  {
-		
+	protected void createButtonPressed()  {	   
+
 		Runnable CreateIdentity = new Runnable() {
 		     public void run() {
-		    	 CreateIdentity createidentity = new CreateIdentity();
+		    	 	CreateIdentity createidentity= new CreateIdentity();
 					createidentity.createAndShowGUI();
 		     }
 		 };
-
-		 SwingUtilities.invokeLater(CreateIdentity);
-		         
+		 
+		SwingUtilities.invokeLater(CreateIdentity);
+     
 	}
 	/**
 	 * Delete selected identity when delete button is pressed.
@@ -190,17 +194,12 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
 		String emailAddress = (String) table.getValueAt(SelectedRow, 1);
 		String uid = (String) table.getValueAt(SelectedRow, 2);
 		//Connect to server and send command
-		
-		Container frame = table.getParent();
-
-		
 		try {
 			Client client = new Client();
 			client.connectToServer();
 			client.deleteIdentity(displayName, emailAddress, uid);
-			String data[][]=createDataArray(client.readAllIdentities());
-			refreshTable();
 			client.disconnectFromServer();
+			refreshTable();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -219,7 +218,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
 			String updatedData[][]=createDataArray(client.readAllIdentities());
 			model.setData(updatedData);
 			table.repaint();
-			client.disconnectFromServer();
+			model.fireTableDataChanged();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -314,11 +313,53 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
      * event-dispatching thread.
      * @throws IOException 
      */
-    private static void createAndShowGUI() throws IOException {
+    public void createAndShowGUI() throws IOException {
         //Create and set up the window.
         JFrame frame = new JFrame("Identities Table");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        //Add windows listener
+        frame.addWindowListener(new WindowListener(){ public void windowActivated(WindowEvent e) {
+        	
+        System.out.println("WindowListener method called: windowActivated.");
+        refreshTable();
+        }
 
+		@Override
+		public void windowClosed(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowClosing(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowDeactivated(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowDeiconified(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowIconified(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void windowOpened(WindowEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}});
         //Create and set up the content pane.
         IdentitiesTable newContentPane = new IdentitiesTable();
         newContentPane.setOpaque(true); //content panes must be opaque
@@ -329,20 +370,6 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
         frame.setVisible(true);
     }
 
-    public static void main(String[] args)  {
-        //Schedule a job for the event-dispatching thread:
-        //creating and showing this application's GUI.
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                try {
-					createAndShowGUI();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            }
-        });
-    }
     /** receive all identities from the server in a single line a create a multi dimentional array need for the creation of the table.
      *  Response String should contain ;; separator for identify Identities and :: separator for identity Identity Fields
      * @param response

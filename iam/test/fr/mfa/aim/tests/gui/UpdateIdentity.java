@@ -26,41 +26,25 @@ public class UpdateIdentity extends JPanel {
     private JFormattedTextField txtEmailAddress;
     private JFormattedTextField txtUid;
     
-    //Text of Textfields
-    private String txtDisplayNameContent;
-    private String txtEmailAddressContent;
-    private String txtUidContent;
+    //Fields for data modification
+	private String txtEmailAddressContent ="";
+    private String txtUidContent ="";
+    private String txtDisplayNameContent ="";
+    
+    //messages
+    private String updateMessage="Your identity has been update.";
     
     //Add buttons
     protected JButton btnUpdate;
     protected JButton btnExit;
     
-    //Getters and setters for txts
-    public String getTxtDisplayNameContent() {
-		return txtDisplayNameContent;
-	}
-
-	public void setTxtDisplayNameContent(String txtDisplayNameContent) {
-		this.txtDisplayNameContent = txtDisplayNameContent;
-	}
-
-	public String getTxtEmailAddressContent() {
-		return txtEmailAddressContent;
-	}
-
-	public void setTxtEmailAddressContent(String txtEmailAddressContent) {
-		this.txtEmailAddressContent = txtEmailAddressContent;
-	}
-
-	public String getTxtUidContent() {
-		return txtUidContent;
-	}
-
-	public void setTxtUidContent(String txtUidContent) {
-		this.txtUidContent = txtUidContent;
-	}
-
-    public UpdateIdentity(){
+   /**
+    * Class constructor
+    * @param DisplayName
+    * @param EmailAddress
+    * @param Uid
+    */
+    public UpdateIdentity(String DisplayName, String EmailAddress, String Uid){
     	super(new BorderLayout());
         //setUpFormats();
     	
@@ -74,11 +58,11 @@ public class UpdateIdentity extends JPanel {
     	lbUid = new JLabel("Uid");
     	
     	//Create the text fields and set them up.
-        txtDisplayName = new JFormattedTextField(txtDisplayNameContent);
+        txtDisplayName = new JFormattedTextField(DisplayName);
     	txtDisplayName.setColumns(20);
-    	txtEmailAddress = new JFormattedTextField(txtEmailAddressContent);
+    	txtEmailAddress = new JFormattedTextField(EmailAddress);
     	txtEmailAddress.setColumns(20);
-    	txtUid = new JFormattedTextField(txtUidContent);
+    	txtUid = new JFormattedTextField(Uid);
     	txtUid.setColumns(20);
     	
     	//Lay out the labels in a panel.
@@ -104,8 +88,35 @@ public class UpdateIdentity extends JPanel {
         // Add listeners for the buttons
         btnUpdate.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){updateButtonPressed();}});
 		btnExit.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){exitButtonPressed();}});
-    }
-	
+    } // End constructor
+    
+    
+    // Getters and setters for identity values
+    
+    public String getTxtDisplayNameContent() {
+		return txtDisplayNameContent;
+	}
+
+	public void setTxtDisplayNameContent(String txtDisplayNameContent) {
+		this.txtDisplayNameContent = txtDisplayNameContent;
+	}
+
+	public String getTxtEmailAddressContent() {
+		return txtEmailAddressContent;
+	}
+
+	public void setTxtEmailAddressContent(String txtEmailAddressContent) {
+		this.txtEmailAddressContent = txtEmailAddressContent;
+	}
+
+	public String getTxtUidContent() {
+		return txtUidContent;
+	}
+
+	public void setTxtUidContent(String txtUidContent) {
+		this.txtUidContent = txtUidContent;
+	}
+    
     protected void exitButtonPressed() {
     	Container frame = btnExit.getParent();
         do 
@@ -123,6 +134,8 @@ public class UpdateIdentity extends JPanel {
 			client.connectToServer();
 			client.updateIdentity(displayName, emailAddress, uid);
 			client.disconnectFromServer();
+			infoBox(updateMessage,"");
+			exitButtonPressed();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -140,10 +153,19 @@ public class UpdateIdentity extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
  
         //Add contents to the window.
-        frame.add(new UpdateIdentity());
+        frame.add(new UpdateIdentity(txtDisplayNameContent, txtEmailAddressContent, txtUidContent));
  
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+    }
+    /**
+ 	 * Create a information window message box.
+ 	 * @param infoMessage
+ 	 * @param titleBar
+ 	 */
+ 	public static void infoBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
     }
 }
