@@ -7,6 +7,8 @@ import javax.swing.table.TableRowSorter;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.awt.Component;
@@ -16,7 +18,7 @@ import fr.mfa.aim.tests.gui.SpringUtilities;
 import fr.mfa.iam.services.networking.Client;
 
 @SuppressWarnings("serial")
-public class IdentitiesTable extends JPanel implements TableModelListener{
+public class IdentitiesTable extends JPanel implements TableModelListener, WindowFocusListener{
 
 	private JTable table;
 	private MyTableModel model;
@@ -31,7 +33,6 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        
         // Connect to server and request all identities that will be populated in the table. 
         Client client = new Client();
         client.connectToServer();
@@ -82,6 +83,8 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
         filterText = new JTextField();
       
         //Whenever filterText changes, invoke newFilter.
+       
+        
         filterText.getDocument().addDocumentListener(
                 new DocumentListener() {
                     public void changedUpdate(DocumentEvent e) {
@@ -120,7 +123,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
 		createButton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){createButtonPressed();}});
 		modifyButton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){modifyButtonPressed();}});
 		exitButton.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){exitButtonPressed();}});
-        
+		
 		// Add Buttons to form
 		form.add(l3);
 		form.add(createButton);
@@ -136,6 +139,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
         
         // Add Form
         add(form);
+        
     }
     
     /**
@@ -164,9 +168,17 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
 	/**
 	 * Call create identity method when createButton is pressed.
 	 */
-	protected void createButtonPressed() {
-		CreateIdentity createidentity = new CreateIdentity();
-		createidentity.createAndShowGUI();
+	protected void createButtonPressed()  {
+		
+		Runnable CreateIdentity = new Runnable() {
+		     public void run() {
+		    	 CreateIdentity createidentity = new CreateIdentity();
+					createidentity.createAndShowGUI();
+		     }
+		 };
+
+		 SwingUtilities.invokeLater(CreateIdentity);
+		         
 	}
 	/**
 	 * Delete selected identity when delete button is pressed.
@@ -187,13 +199,31 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
 			client.connectToServer();
 			client.deleteIdentity(displayName, emailAddress, uid);
 			String data[][]=createDataArray(client.readAllIdentities());
-			model.setData(data);
-			table.repaint();
+			refreshTable();
 			client.disconnectFromServer();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
+	}
+
+	/**
+	 * Refresh content of table from the server.
+	 * 
+	 */
+	
+	private void refreshTable() {
+		Client client = new Client();
+		try {
+			client.connectToServer();
+			String updatedData[][]=createDataArray(client.readAllIdentities());
+			model.setData(updatedData);
+			table.repaint();
+			client.disconnectFromServer();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/** 
@@ -299,7 +329,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -329,9 +359,32 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
  		}
  		return data;
  	}
+ 	
+ 	/**
+ 	 * Create a information window message box.
+ 	 * @param infoMessage
+ 	 * @param titleBar
+ 	 */
+ 	public static void infoBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
+    }
 
 	@Override
 	public void tableChanged(TableModelEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowGainedFocus(WindowEvent arg0) {
+		// TODO Auto-generated method stub
+		refreshTable();
+		
+	}
+
+	@Override
+	public void windowLostFocus(WindowEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}

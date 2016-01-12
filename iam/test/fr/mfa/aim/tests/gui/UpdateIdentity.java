@@ -12,7 +12,6 @@ import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.beans.PropertyChangeEvent;
 import java.text.*;
- 
 
 @SuppressWarnings("serial")
 public class UpdateIdentity extends JPanel {
@@ -112,15 +111,13 @@ public class UpdateIdentity extends JPanel {
         do 
             frame = frame.getParent(); 
         while (!(frame instanceof JFrame));                                      
-        ((JFrame) frame).dispose();
-		
+        ((JFrame) frame).dispose();		
 	}
 
 	protected void updateButtonPressed() {
 		String displayName = txtDisplayName.getText();
 		String emailAddress = txtEmailAddress.getText(); 
 		String uid = txtUid.getText();
-		
 		Client client = new Client();
 		try {
 			client.connectToServer();

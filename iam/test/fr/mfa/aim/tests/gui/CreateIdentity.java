@@ -25,6 +25,8 @@ public class CreateIdentity extends JPanel{
     private JLabel lbEmailAddress;
     private JLabel lbUid;
     
+    // messages 
+    private String creationSuccesful="Your new identity has been create.";
     //Fields for data modification
     private JFormattedTextField txtDisplayName;
     private JFormattedTextField txtEmailAddress;
@@ -94,12 +96,13 @@ public class CreateIdentity extends JPanel{
 			String displayName = txtDisplayName.getText();
 			String emailAddress = txtEmailAddress.getText(); 
 			String uid = txtUid.getText();
-			
 			Client client = new Client();
 			client.connectToServer();
 			client.createIdentity(displayName, emailAddress, uid);
 			client.disconnectFromServer();
-			
+			infoBox(creationSuccesful,"");
+			exitButtonPressed();
+		
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,5 +130,16 @@ public class CreateIdentity extends JPanel{
         frame.pack();
         frame.setVisible(true);
     }
+
+    /**
+ 	 * Create a information window message box.
+ 	 * @param infoMessage
+ 	 * @param titleBar
+ 	 */
+ 	public static void infoBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);
+    }
+
 	
 }
