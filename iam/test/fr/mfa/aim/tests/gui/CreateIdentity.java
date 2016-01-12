@@ -36,10 +36,11 @@ public class CreateIdentity extends JPanel{
     public CreateIdentity(){
     	super(new BorderLayout());
         //setUpFormats();
+    
            
     	// Create Buttons
     	btnCreate = new JButton("Create Identity");
-    	btnExit = new JButton("Create Identity");
+    	btnExit = new JButton("Exit");
     	
     	//Create the labels.
     	lbDisplayName = new JLabel("DisplayName");
@@ -47,11 +48,11 @@ public class CreateIdentity extends JPanel{
     	lbUid = new JLabel("Uid");
     	
     	//Create the text fields and set them up.
-        txtDisplayName = new JFormattedTextField("DisplayName");
+        txtDisplayName = new JFormattedTextField("");
     	txtDisplayName.setColumns(20);
-    	txtEmailAddress = new JFormattedTextField("EmailAddress");
+    	txtEmailAddress = new JFormattedTextField("");
     	txtEmailAddress.setColumns(20);
-    	txtUid = new JFormattedTextField("Uid");
+    	txtUid = new JFormattedTextField("");
     	txtUid.setColumns(20);
     	
     	//Lay out the labels in a panel.
@@ -70,7 +71,7 @@ public class CreateIdentity extends JPanel{
      
         //Put the panels in this panel, labels on left,
         //text fields on right.
-        setBorder(BorderFactory.createEmptyBorder(20, 200, 20, 20));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         add(labelPane, BorderLayout.CENTER);
         add(fieldPane, BorderLayout.LINE_END);
         
@@ -80,15 +81,25 @@ public class CreateIdentity extends JPanel{
     }
 	
     protected void exitButtonPressed() {
-		System.exit(0);
-		
+    	Container frame = btnExit.getParent();
+        do 
+            frame = frame.getParent(); 
+        while (!(frame instanceof JFrame));                                      
+        ((JFrame) frame).dispose();
 	}
 
 	protected void createButtonPressed() {
 		
 		try {
+			String displayName = txtDisplayName.getText();
+			String emailAddress = txtEmailAddress.getText(); 
+			String uid = txtUid.getText();
+			
 			Client client = new Client();
-			client.sendCommand("create::"+lbDisplayName.getText().toString()+"::"+lbEmailAddress.getText().toString()+"::"+lbUid.getText().toString());
+			client.connectToServer();
+			client.createIdentity(displayName, emailAddress, uid);
+			client.disconnectFromServer();
+			
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -107,10 +118,10 @@ public class CreateIdentity extends JPanel{
     public void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("Create Identity");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
  
         //Add contents to the window.
-        frame.add(new UpdateIdentity());
+        frame.add(new CreateIdentity());
  
         //Display the window.
         frame.pack();

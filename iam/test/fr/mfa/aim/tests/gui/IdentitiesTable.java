@@ -10,9 +10,10 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.awt.Component;
+import java.awt.Container;
+
 import fr.mfa.aim.tests.gui.SpringUtilities;
 import fr.mfa.iam.services.networking.Client;
-import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class IdentitiesTable extends JPanel implements TableModelListener{
@@ -148,7 +149,15 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
      * Call modify selected identity when modifyButton is pressed.
      */
 	protected void modifyButtonPressed() {
+		// Save information from the selected Identity.
+		String displayName = (String) table.getValueAt(SelectedRow, 0);
+		String emailAddress = (String) table.getValueAt(SelectedRow, 1);
+		String uid = (String) table.getValueAt(SelectedRow, 2);
+		
 		UpdateIdentity updateidentity = new UpdateIdentity();
+		updateidentity.setTxtDisplayNameContent(displayName);
+		updateidentity.setTxtEmailAddressContent(emailAddress);
+		updateidentity.setTxtUidContent(uid);
 		updateidentity.createAndShowGUI();
 		
 	}
@@ -170,11 +179,14 @@ public class IdentitiesTable extends JPanel implements TableModelListener{
 		String uid = (String) table.getValueAt(SelectedRow, 2);
 		//Connect to server and send command
 		
+		Container frame = table.getParent();
+
+		
 		try {
 			Client client = new Client();
 			client.connectToServer();
-			client.sendCommand("delete::"+displayName+"::"+emailAddress+"::"+uid);
-			String data[][]=createDataArray(client.sendCommand("readall"));
+			client.deleteIdentity(displayName, emailAddress, uid);
+			String data[][]=createDataArray(client.readAllIdentities());
 			model.setData(data);
 			table.repaint();
 			client.disconnectFromServer();

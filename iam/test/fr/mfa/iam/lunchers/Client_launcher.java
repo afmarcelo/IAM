@@ -35,7 +35,9 @@ public class Client_launcher {
 		    //infoBox(response,"Server Response");
 			
 		     response = client.sendCommand("create::Kevan 123 ::kevan@hotmail.com::98989898");
-		   	infoBox(response,"Server Response");
+		     response = client.sendCommand("create::Marcelo ::marcelo@hotmail.com::sdfsdf");
+		     response = client.sendCommand("create::Andrea::andrea@hotmail.com::12138");
+		   	 infoBox(response,"Server Response");
 			
 			response = client.sendCommand("readall");
 			//infoBox(response,"Server Response");

@@ -20,6 +20,11 @@ public class Client {
 	private Socket socket;
 	private BufferedReader in;
     private PrintWriter out;
+    private String cmdCreate="create";
+    private String cmdDelete="delete";
+    private String cmdUpdate="update";
+    private String cmdReadAll="readall";
+    private String cmdSeparator="::";
 
     /**
      * Implements the connection logic by prompting the end user for
@@ -58,6 +63,50 @@ public class Client {
     public String sendCommand(String command) throws UnknownHostException, IOException{
     	sendMessage(command);
     	
+    	String response = "";
+    	while(response.isEmpty()){
+    		response = receiveMessage();
+    		}
+    	return response;
+    }
+    
+    public String createIdentity(String displayName, String emailAddress, String uid) throws IOException{
+    	
+    	String Command = cmdCreate+cmdSeparator+displayName+cmdSeparator+emailAddress+cmdSeparator+uid;  
+    	sendMessage(Command);
+    	String response = "";
+    	while(response.isEmpty()){
+    		response = receiveMessage();
+    		}
+    	return response;
+    }
+    
+    public String deleteIdentity(String displayName, String emailAddress, String uid) throws IOException{
+    	
+    	String Command = cmdDelete+cmdSeparator+displayName+cmdSeparator+emailAddress+cmdSeparator+uid;  
+    	sendMessage(Command);
+    	String response = "";
+    	while(response.isEmpty()){
+    		response = receiveMessage();
+    		}
+    	return response;
+    }
+    
+    public String updateIdentity(String displayName, String emailAddress, String uid) throws IOException{
+    	
+    	String Command = cmdUpdate+cmdSeparator+displayName+cmdSeparator+emailAddress+cmdSeparator+uid;  
+    	sendMessage(Command);
+    	String response = "";
+    	while(response.isEmpty()){
+    		response = receiveMessage();
+    		}
+    	return response;
+    }
+    
+    public String readAllIdentities() throws IOException{
+    	
+    	String Command = cmdReadAll;  
+    	sendMessage(Command);
     	String response = "";
     	while(response.isEmpty()){
     		response = receiveMessage();
