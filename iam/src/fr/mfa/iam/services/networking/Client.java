@@ -24,6 +24,7 @@ public class Client {
     private String cmdDelete="delete";
     private String cmdUpdate="update";
     private String cmdReadAll="readall";
+    private String cmdAuth="auth";
     private String cmdSeparator="::";
 
     /**
@@ -95,6 +96,17 @@ public class Client {
     public String updateIdentity(String displayName, String emailAddress, String uid) throws IOException{
     	
     	String Command = cmdUpdate+cmdSeparator+displayName+cmdSeparator+emailAddress+cmdSeparator+uid;  
+    	sendMessage(Command);
+    	String response = "";
+    	while(response.isEmpty()){
+    		response = receiveMessage();
+    		}
+    	return response;
+    }
+    
+    public String auth(String username, String password) throws IOException{
+    	
+    	String Command = cmdAuth+cmdSeparator+username+cmdSeparator+password;  
     	sendMessage(Command);
     	String response = "";
     	while(response.isEmpty()){

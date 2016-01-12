@@ -1,0 +1,7 @@
+--- user:begin ---
+Marcelo Ardiles
+sk8_marcelo@hotmail.com
+999999
+admin
+marcelo01
+--- user:end ---
