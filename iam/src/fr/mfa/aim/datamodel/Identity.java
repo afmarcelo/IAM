@@ -1,5 +1,6 @@
 package fr.mfa.aim.datamodel;
 
+import java.util.Date;
 
 /**
  * This is the representation for the Identity, the main datamodel to manage in IamCore
@@ -11,9 +12,9 @@ public class Identity {
 	private String displayName;
 	private String emailAddress;
 	private String uid;
+	private Date birthDate;
 	
-	
-	
+
 	/**
 	 * @param displayName
 	 * @param emailAddress
@@ -91,6 +92,16 @@ public class Identity {
 	}
 	
 	
+	
+	public Date getBirthDate() {
+		return birthDate;
+	}
+
+
+
+	public void setBirthDate(Date birthDate) {
+		this.birthDate = birthDate;
+	}
 	
 	
 
