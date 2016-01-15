@@ -35,6 +35,7 @@ import org.w3c.dom.*;
 
 import fr.mfa.aim.configuration.Configuration;
 import fr.mfa.aim.datamodel.Identity;
+import fr.mfa.aim.datamodel.User;
 import fr.mfa.iam.services.dao.IdentityDAO;
 import fr.mfa.iam.tests.services.match.Matcher;
 import fr.mfa.iam.tests.services.match.impl.StartsWithIdentityMatchStrategy;
@@ -139,6 +140,39 @@ public class IdentityXmlDAO implements IdentityDAO {
 
 		return results;
 		
+	}
+	/**
+	 * This method will provide all the User information according to the user parameter which is searched.
+	 * @param user
+	 * @return User object.
+	 */
+	public User searchUser(User criteria){
+		User result=null;
+		// gets all the nodes called "identity" (see xml/identities.xml in
+		// the project)
+		NodeList nodes = this.doc.getElementsByTagName("identity");
+		int nodesSize = nodes.getLength();
+
+		// for every found identity
+		for (int i = 0; i < nodesSize; i++) {
+			Node node = nodes.item(i);
+			// test if the found node is really an Element
+			// in the DOM implementation a Node can represent an Element, an
+			// Attribute or a TextContent
+			// so we have to be sure that the found node is of type
+			// "Element" using the instanceof operator
+			if (node instanceof Element) {
+
+				User user = readOneUserFromXmlElement(node);
+				// usage of Matcher to filter only the wished identities.
+				System.out.println("User found: " + user.getUsername()+ "password: "+user.getPassword() + " user searched: "+ criteria.getUsername());
+				
+				if (user.getUsername().equals(criteria.getUsername().toString())) {
+					return user;
+				}
+			}
+		}		
+		return result;
 	}
 	
 	/**
@@ -296,6 +330,74 @@ public class IdentityXmlDAO implements IdentityDAO {
 		currentIdentity.setBirthDate(birthDate);
 		return currentIdentity;
 	}
+	
+	/**
+	 * This method will return an User object from a given node.
+	 * 
+	 * @param User
+	 */
+	private User readOneUserFromXmlElement(Node node) {
+		// cast the node into an Element, as we are sure it is an
+		// instance of Element
+		Element user = (Element) node;
+
+		// get the properties for the encountered identity
+		NodeList properties = user.getElementsByTagName("property");
+		int length = properties.getLength();
+
+		// declare and initialize several variables on the same line
+		String displayName = "", guid = "", email = "",username="",password=""; 
+		Date birthDate=null;
+		// for every found property
+		for (int j = 0; j < length; j++) {
+			Node item = properties.item(j);
+			// we check that the found property is really an element
+			// (see the explanation above)
+			if (item instanceof Element) {
+				Element propertyElt = (Element) item;
+				// we need to store the right value in the right
+				// property so we use a switch-case structure
+				// to handle the 3 cases
+				String textContent = propertyElt.getTextContent();
+				switch (propertyElt.getAttribute("name")) {
+				case "displayName":
+					displayName = textContent;
+					break;
+				case "guid":
+					guid = textContent;
+					break;
+				case "email":
+					email = textContent;
+					break;
+				case "username":
+					username = textContent;
+					break;
+				case "password":
+					password = textContent;
+					break;
+				case "birthDate":
+					try {
+						birthDate = new SimpleDateFormat("dd/MM/yyyy").parse(textContent);
+					} catch (Exception e) {
+						e.printStackTrace();
+						//TODO finish exception handling
+					}
+					break;
+
+				default:
+					// the encountered property name is not expected
+					// so we use the "default" case
+					break;
+				}
+			}
+		}
+		User currentUser = new User(displayName, email, guid);
+		currentUser.setUsername(username);
+		currentUser.setPassword(password);
+		currentUser.setBirthDate(birthDate);
+		return currentUser;
+	}
+
 	/**
 	 * This method will return the list of nodes of a given identity.
 	 * 

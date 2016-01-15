@@ -2,7 +2,8 @@ package fr.mfa.iam.lunchers;
 
 import java.util.Random;
 
-import fr.mfa.aim.tests.services.dao.file.IdentityFileDAO;
+import fr.mfa.aim.datamodel.User;
+import fr.mfa.aim.tests.services.dao.xml.IdentityXmlDAO;
 import fr.mfa.iam.services.dao.IdentityDAO;
 
 public class test {
@@ -13,9 +14,19 @@ public class test {
 		int random = randomInteger(1,32000);
 		System.out.println(random);
 		
-		IdentityDAO dao = new IdentityFileDAO();
-		System.out.println(dao.readAll());
+		IdentityDAO dao = new IdentityXmlDAO();
+		User user = new User("Marcelo","marcelo","marcelo");
+		user.setUsername("mardiles2");
 		
+		//System.out.println(dao.readAll());
+		
+		IdentityXmlDAO daoxml = new IdentityXmlDAO();
+		User response = daoxml.searchUser(user);
+		if(response!=null){
+			System.out.println(response.getUsername());	
+		}else{
+			System.out.println("no record found");
+		}
 		
 		
 		

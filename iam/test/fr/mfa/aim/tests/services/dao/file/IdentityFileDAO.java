@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import fr.mfa.aim.datamodel.Identity;
+import fr.mfa.aim.datamodel.User;
 import fr.mfa.iam.exceptions.CustomException;
 import fr.mfa.iam.services.dao.IdentityDAO;
 
@@ -230,6 +231,12 @@ public class IdentityFileDAO implements IdentityDAO{
 			System.out.println("the file already exists");
 		}
 		return file;
+	}
+
+	@Override
+	public User searchUser(User citeria) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

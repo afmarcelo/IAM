@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import fr.mfa.aim.datamodel.Identity;
+import fr.mfa.aim.datamodel.User;
 import fr.mfa.iam.exceptions.CustomException;
 
 
@@ -23,5 +24,7 @@ public interface IdentityDAO {
 	public void delete(Identity identity) throws CustomException;
 	
 	public List<Identity> readAll() throws Exception ;
+	
+	public User searchUser(User citeria);
 	
 }

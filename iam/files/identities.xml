@@ -39,4 +39,11 @@
 <property name="email">cle@tbr.com</property>
 <property name="guid">987654123</property>
 </identity>
+<identity>
+<property name="displayName">Marcelo Ardiles</property>
+<property name="email">marcelo@marcelo.com</property>
+<property name="guid">987654122</property>
+<property name="username">mardiles</property>
+<property name="password">marcelo01</property>
+</identity>
 </identities>

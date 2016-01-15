@@ -14,6 +14,7 @@ import java.util.Random;
 
 import fr.mfa.aim.configuration.Configuration;
 import fr.mfa.aim.datamodel.Identity;
+import fr.mfa.aim.datamodel.User;
 import fr.mfa.aim.tests.services.dao.file.IdentityFileDAO;
 import fr.mfa.aim.tests.services.dao.xml.IdentityXmlDAO;
 import fr.mfa.iam.services.dao.IdentityDAO;
@@ -27,8 +28,8 @@ import fr.mfa.iam.services.dao.IdentityDAO;
 public class Server {
 	
 private int ServerPort;
-private static String user = "admin";
-private static String password = "epita01";	
+//private static String user = "admin";
+//private static String password = "epita01";	
 	
 private static IdentityDAO dao;
 	
@@ -149,11 +150,22 @@ private static IdentityDAO dao;
         }
         // Authenticate method, check if user and password are the provided for the thread.
 		public String authenticate(String user_tmp, String password_tmp){
-    		if ( user.equals(user_tmp) && password.equals(password_tmp)){
-    			return "OK";
-    		}else{
-    			return "FAIL";
-    		}	
+			// create local temp User object with the values passed as parameters
+			User user = new User("","","");
+			user.setUsername(user_tmp);
+			user.setPassword(password_tmp);
+			// search for user.
+			User response = dao.searchUser(user);
+			// if a username has been found according to the search criteria evaluate if password is correct and send response.
+			if(response !=null){
+				if(response.getPassword().equals(user.getPassword())){
+					return "OK";
+				}else{
+					return "FAIL";
+				}		
+			}else{ // If response is null, then there is no user with the specified username and it is returned a fail message.
+				return "FAIL";
+			}	
     	}
 		/**
 		 * The following methods calls the Orginals DAO Methods presented in the interface. 
@@ -203,9 +215,5 @@ private static IdentityDAO dao;
 		}
 		 
     }
-		
-		
-
-	
 }
 
