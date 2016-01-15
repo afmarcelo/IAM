@@ -164,9 +164,7 @@ public class IdentityXmlDAO implements IdentityDAO {
 			if (node instanceof Element) {
 
 				User user = readOneUserFromXmlElement(node);
-				// usage of Matcher to filter only the wished identities.
-				System.out.println("User found: " + user.getUsername()+ "password: "+user.getPassword() + " user searched: "+ criteria.getUsername());
-				
+				// If user match with the criteria the user object is returned.
 				if (user.getUsername().equals(criteria.getUsername().toString())) {
 					return user;
 				}
