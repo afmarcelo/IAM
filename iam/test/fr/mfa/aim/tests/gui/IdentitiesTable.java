@@ -165,7 +165,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
 		UpdateIdentity updateidentity = new UpdateIdentity(displayName, emailAddress, uid);
 		updateidentity.setTxtDisplayNameContent(displayName);
 		updateidentity.setTxtEmailAddressContent(emailAddress);
-		updateidentity.setTxtUidContent(displayName);
+		updateidentity.setTxtUidContent(uid);
 		updateidentity.createAndShowGUI();
 		}
 	}

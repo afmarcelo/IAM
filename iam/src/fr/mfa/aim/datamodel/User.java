@@ -4,7 +4,7 @@
 package fr.mfa.aim.datamodel;
 
 /**
- * This is the representation for the Users which is a extension of Identity, the main datamodel to manage in IamCore
+ * This is the representation for the Users, which is a extension of Identity, the main datamodel to manage in IamCore
  * @author marcelo
  *
  */
@@ -15,7 +15,6 @@ public class User extends Identity {
 	
 	public User(String displayName, String emailAddress, String uid) {
 		super(displayName, emailAddress, uid);
-		
 	}
 
 	public String getUsername() {
@@ -33,6 +32,4 @@ public class User extends Identity {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	
 }

@@ -12,34 +12,41 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import fr.mfa.aim.configuration.Configuration;
 import fr.mfa.aim.datamodel.Identity;
 import fr.mfa.aim.tests.services.dao.file.IdentityFileDAO;
+import fr.mfa.aim.tests.services.dao.xml.IdentityXmlDAO;
 import fr.mfa.iam.services.dao.IdentityDAO;
 /**
  * @author marcelo
- * A server program which accepts requests from clients to
+ * This class implement a server program which accepts requests from clients to
  * access to the iam server remotely.  When clients connect, a new thread is
- * started to handle request from the client
- *
- * The program is runs in an infinite loop, so shutdown in platform
- * dependent.  If you ran it from a console window with the "java"
- * interpreter, Ctrl+C generally will shut it down.
- *
+ * started to handle request from the client.
  */
 
 public class Server {
 	
-	
-private int ServerPort = 9898;
+private int ServerPort;
 private static String user = "admin";
 private static String password = "epita01";	
-	/**
-     * A private thread to handle requests on a particular
-     * socket.
-     * @return 
-     * @throws IOException 
-     */
 	
+private static IdentityDAO dao;
+	
+	public Server(){
+		
+		// Set the configuration from Configuration Class
+		Configuration config = new Configuration();
+		ServerPort = config.getServerPort();
+		
+		// Define the DAO which will be used.
+		try {
+			dao = new IdentityXmlDAO();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public void start() throws IOException {
     	    
     	ServerSocket listener = new ServerSocket(ServerPort);
@@ -55,8 +62,13 @@ private static String password = "epita01";
         } 	
     }
    
+	/**
+     * A private thread to handle requests on a particular
+     * socket.
+     * @return 
+     * @throws IOException 
+     */
 	private static class session extends Thread {
-    	
     	
         private Socket socket;
         private int clientNumber;
@@ -85,14 +97,8 @@ private static String password = "epita01";
                         break;
                     }
                     
-                    //System.out.println(input);
-                    // Process Request from client and write response
-                    //String response = ""+processRequest(input);
-                    //response ="sn"+response;
-                    
+                    // Process the message received from the client side and respond writing the client buffer.
                     out.println(processRequest(input));
-                    // Response to client
-                   // out.println("El server responde");
                 }
                 
             } catch (IOException e) {
@@ -103,13 +109,11 @@ private static String password = "epita01";
                 try {
                     socket.close();
                 } catch (IOException e) {
-                    log("Couldn't close a socket, what's going on?");
+                    log("Couldn't close a socket");
                 }
                 log("Connection with client# " + clientNumber + " closed");
             }
         }
-
-
         /**
          * Logs a simple message.  In this case we just write the
          * message to the server applications standard output.
@@ -117,13 +121,7 @@ private static String password = "epita01";
         private void log(String message) {
         	System.out.println(message);
         }
-        
-        private void sendMessage(String message) throws IOException{
-        	PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-        	out.println(message);
-        }
-        
-        
+     
         /*
          * This method process the request. 
          */
@@ -169,7 +167,6 @@ private static String password = "epita01";
 		public String searchIdentity(Identity identity) throws Exception{
 			
 			String result="";
-			IdentityDAO dao = new IdentityFileDAO();
 			List<Identity> identities = dao.search(identity);
 			
 			for (int i=0; i< identities.size(); i++){
@@ -179,25 +176,22 @@ private static String password = "epita01";
 		}
 		public String createIdentity(String displayName, String emailAddress, String uid) throws Exception{
 			Identity identity = new Identity(displayName, emailAddress, uid);
-			IdentityDAO dao = new IdentityFileDAO();
+			
 			dao.create(identity);
 			return "OK";
 		}
 		public String updateIdentity(String displayName, String emailAddress, String uid) throws Exception{
 			Identity identity = new Identity(displayName, emailAddress, uid);
-			IdentityDAO dao = new IdentityFileDAO();
 			dao.update(identity);
 			return "OK";
 		}
 		public String deleteIdentity(String displayName, String emailAddress, String uid) throws Exception{
 			Identity identity = new Identity(displayName, emailAddress, uid);
-			IdentityDAO dao = new IdentityFileDAO();
 			dao.delete(identity);
 			return "OK";
 		}
 		public String readAllIdentities() throws Exception{
 			String result="";
-			IdentityDAO dao = new IdentityFileDAO();
 			
 			List<Identity> identities = dao.readAll();
 			// result = identities.toString();
@@ -207,8 +201,7 @@ private static String password = "epita01";
 			}
 			return result;
 		}
-		
-         
+		 
     }
 		
 		

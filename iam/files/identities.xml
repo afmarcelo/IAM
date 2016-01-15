@@ -8,11 +8,7 @@
 	</identity>
 	
 	<!-- this identity has two "siblings" the previous and the next identities -->
-	<identity>
-		<property name="displayName">Clément</property>
-		<property name="email">cle@tbr.com</property>
-		<property name="guid">987654123</property>
-	</identity>
+	
 	
 	<!-- this is the "last child" of "identities" -->
 	<identity>
@@ -27,14 +23,20 @@
 
 
 
+
 <identity>
 <property name="displayName">Francois Hollande</property>
 <property name="email">hollande@hotmail.com</property>
 <property name="guid">00001</property>
 </identity>
 <identity>
-<property name="displayName">Francois Hollande</property>
-<property name="email">hollande@hotmail.com</property>
-<property name="guid">00001</property>
+<property name="displayName">Nicolas Sarcozy</property>
+<property name="email">sarkozy@france.fr</property>
+<property name="guid">123123</property>
+</identity>
+<identity>
+<property name="displayName">Clémente</property>
+<property name="email">cle@tbr.com</property>
+<property name="guid">987654123</property>
 </identity>
 </identities>

@@ -10,13 +10,15 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 
+import fr.mfa.aim.configuration.Configuration;
+
 /**
  * @author marcelo
  * Text Client to access to the iam Server.  
  */
 public class Client {
-	private String serverAddress = "127.0.0.1";
-	private int serverPort = 9898;
+	private String serverAddress;
+	private int serverPort;
 	private Socket socket;
 	private BufferedReader in;
     private PrintWriter out;
@@ -26,13 +28,22 @@ public class Client {
     private String cmdReadAll="readall";
     private String cmdAuth="auth";
     private String cmdSeparator="::";
+    
+    /**
+     * Constructor of the class load the configuration from the configuration class.
+     */
+    public Client(){
+    	// Set configuration from configuration class.
+    	Configuration config = new Configuration();
+    	serverAddress = config.getServerIP();
+    	serverPort = config.getServerPort();
+    }
 
     /**
-     * Implements the connection logic by prompting the end user for
-     * the server's IP address, connecting, setting up streams, and
-     * consuming the welcome messages from the server.  The Capitalizer
-     * protocol says that the server sends three lines of text to the
-     * client immediately after establishing a connection.
+     * Implements the connection logic connecting to the server, setting up streams, and
+     * consuming the server methods.  In order to interact with the server a simple protocol was created
+     * After being authenticated, the client send a text message to the server which is divided by "::" being
+     * the first column for the command to be executed and the rests columns for the parameters of the desired command.
      */
     
     public void connectToServer() throws IOException {

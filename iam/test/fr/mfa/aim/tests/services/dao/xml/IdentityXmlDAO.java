@@ -33,6 +33,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.*;
 
+import fr.mfa.aim.configuration.Configuration;
 import fr.mfa.aim.datamodel.Identity;
 import fr.mfa.iam.services.dao.IdentityDAO;
 import fr.mfa.iam.tests.services.match.Matcher;
@@ -48,10 +49,16 @@ public class IdentityXmlDAO implements IdentityDAO {
 	Matcher<Identity> matcher = new StartsWithIdentityMatchStrategy();
 
 	private Document doc;
-	private String filepath ="files/identities.xml";
-	private String tmpfilepath="files/tmp.xml";
+	private String filepath;
+	private String tmpfilepath;
 	
 	public IdentityXmlDAO() {
+		// Load configuration from configuración class.
+		Configuration config = new Configuration();
+		filepath = config.getXmlFilePath();
+		tmpfilepath = config.getXmlFilePath() + "tmp.xml";
+		
+		// Create XML objects.
 		try {
 			// Intermediate instance to build a document builder (the factory to
 			// parse DOM documents)
