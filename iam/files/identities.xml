@@ -37,4 +37,14 @@
 <property name="username">mardiles</property>
 <property name="password">marcelo01</property>
 </user>
+<identity>
+<property name="displayName">Kevan 123 </property>
+<property name="email">kevan@hotmail.com</property>
+<property name="guid">98989898</property>
+</identity>
+<identity>
+<property name="displayName">Marcelo </property>
+<property name="email">marcelo@hotmail.com</property>
+<property name="guid">sdfsdf</property>
+</identity>
 </identities>

@@ -25,7 +25,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
     private JTextField filterText;
     private TableRowSorter<MyTableModel> sorter;
     protected JButton deleteButton, modifyButton, createButton, exitButton,refreshButton;
-    private int SelectedRow;
+    private Integer SelectedRow;
     
     public IdentitiesTable() throws IOException {
         super();
@@ -146,7 +146,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
 	protected void modifyButtonPressed() {
 		// Save information from the selected Identity.
 		
-		if (SelectedRow == 0){
+		if (SelectedRow == null){			
 			infoBox("ERROR: Select one identity", "ERROR");
 		}else{
 		

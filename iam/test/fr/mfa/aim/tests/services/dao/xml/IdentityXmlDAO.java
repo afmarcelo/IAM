@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.mfa.aim.tests.services.dao.xml;
 
 import java.io.File;
@@ -37,8 +34,8 @@ import fr.mfa.iam.tests.services.match.Matcher;
 import fr.mfa.iam.tests.services.match.impl.StartsWithIdentityMatchStrategy;
 
 /**
- * This class implements all the required method to work with a XML file. 
- * 
+ * This class implements all the required methods to work with a XML file. 
+ * @author marcelo
  */
 public class IdentityXmlDAO implements IdentityDAO {
 

@@ -3,16 +3,14 @@ package fr.mfa.aim.tests.gui;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
-
 import fr.mfa.iam.services.networking.Client;
-
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
-import java.beans.PropertyChangeEvent;
-import java.text.*;
 
+/**
+ * This class represents the update identity window.
+ * @author marcelo
+ *
+ */
 @SuppressWarnings("serial")
 public class UpdateIdentity extends JPanel {
 	

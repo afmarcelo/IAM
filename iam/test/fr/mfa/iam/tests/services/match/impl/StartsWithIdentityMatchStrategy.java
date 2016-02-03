@@ -4,6 +4,11 @@ import fr.mfa.aim.datamodel.Identity;
 
 import fr.mfa.iam.tests.services.match.Matcher;
 
+/**
+ * This class implement the Matcher interface with the search criteria of "match".
+ * @author marcelo
+ *
+ */
 public class StartsWithIdentityMatchStrategy implements Matcher<Identity> {
 
 	@Override

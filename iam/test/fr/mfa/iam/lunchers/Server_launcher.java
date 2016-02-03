@@ -8,6 +8,7 @@ import java.io.IOException;
 import fr.mfa.iam.services.networking.Server;
 
 /**
+ * This class start the server program and keep listening for client connections.
  * @author marcelo
  *
  */
@@ -26,7 +27,6 @@ public class Server_launcher {
 			server.start();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

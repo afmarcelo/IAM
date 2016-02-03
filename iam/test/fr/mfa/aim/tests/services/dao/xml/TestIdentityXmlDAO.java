@@ -13,6 +13,7 @@ import fr.mfa.aim.datamodel.Identity;
 
 /**
  * @author marcelo
+ * This class implements the test case for the xml dao.
  *
  */
 public class TestIdentityXmlDAO {
@@ -33,7 +34,6 @@ public class TestIdentityXmlDAO {
 		try {
 			//System.out.println(dao.readAll());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
