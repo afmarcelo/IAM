@@ -1,0 +1,12 @@
+fr.mfa.aim.configuration
+fr.mfa.aim.datamodel
+fr.mfa.aim.tests.configuration
+fr.mfa.aim.tests.gui
+fr.mfa.aim.tests.services.dao.file
+fr.mfa.aim.tests.services.dao.xml
+fr.mfa.iam.exceptions
+fr.mfa.iam.lunchers
+fr.mfa.iam.services.dao
+fr.mfa.iam.services.networking
+fr.mfa.iam.tests.services.match
+fr.mfa.iam.tests.services.match.impl
