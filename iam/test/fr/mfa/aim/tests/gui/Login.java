@@ -22,6 +22,7 @@ import javax.swing.JPasswordField;
 import fr.mfa.iam.services.networking.Client;
 
 /**
+ * This Class represents the login form, for the first authentication.
  * @author marcelo
  *
  */
@@ -126,7 +127,6 @@ public class Login extends JPanel{
 			response = client.auth(username, password);
 			client.disconnectFromServer();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -137,7 +137,6 @@ public class Login extends JPanel{
 				maintable.createAndShowGUI();
 				exitButtonPressed();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}else{

@@ -14,22 +14,18 @@ public class test {
 		int random = randomInteger(1,32000);
 		System.out.println(random);
 		
-		IdentityDAO dao = new IdentityXmlDAO();
 		User user = new User("Marcelo","marcelo","marcelo");
-		user.setUsername("mardiles2");
+		user.setUsername("mardiles");
 		
 		//System.out.println(dao.readAll());
 		
-		IdentityXmlDAO daoxml = new IdentityXmlDAO();
+		IdentityDAO daoxml = new IdentityXmlDAO();
 		User response = daoxml.searchUser(user);
 		if(response!=null){
 			System.out.println(response.getUsername());	
 		}else{
 			System.out.println("no record found");
 		}
-		
-		
-		
 	}
 	
 	 public static int randomInteger(int min, int max) {

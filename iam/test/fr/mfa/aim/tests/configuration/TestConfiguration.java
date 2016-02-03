@@ -1,11 +1,9 @@
-/**
- * 
- */
 package fr.mfa.aim.tests.configuration;
 
 import fr.mfa.aim.configuration.Configuration;
 
 /**
+ * Test class for validating the configuration loading.
  * @author marcelo
  *
  */

@@ -8,52 +8,47 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 import fr.mfa.aim.configuration.Configuration;
 import fr.mfa.aim.datamodel.Identity;
 import fr.mfa.aim.datamodel.User;
-import fr.mfa.aim.tests.services.dao.file.IdentityFileDAO;
 import fr.mfa.aim.tests.services.dao.xml.IdentityXmlDAO;
 import fr.mfa.iam.services.dao.IdentityDAO;
 /**
  * @author marcelo
- * This class implement a server program which accepts requests from clients to
+ * This class implements a server program which accepts requests from clients to
  * access to the iam server remotely.  When clients connect, a new thread is
  * started to handle request from the client.
  */
-
 public class Server {
-	
 private int ServerPort;
-//private static String user = "admin";
-//private static String password = "epita01";	
-	
-private static IdentityDAO dao;
-	
+/**
+ * Create a static dao property, which will be used for implementing the commands requested from the authenticate client side. 		
+ */
+private static IdentityDAO dao;	
+	/**
+	 * Serve constructor, initialize configuration obtained from the configuration class.
+	 */
 	public Server(){
-		
 		// Set the configuration from Configuration Class
 		Configuration config = new Configuration();
 		ServerPort = config.getServerPort();
-		
 		// Define the DAO which will be used.
 		try {
 			dao = new IdentityXmlDAO();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Start the server according to the configuration.
+	 * @throws IOException
+	 */
 	public void start() throws IOException {
-    	    
     	ServerSocket listener = new ServerSocket(ServerPort);
         System.out.println("IAM Server is running");
         int clientNumber = 0;
-        
         try {
             while (true) {
                 new session(listener.accept(), clientNumber++).start();
@@ -64,26 +59,27 @@ private static IdentityDAO dao;
     }
    
 	/**
-     * A private thread to handle requests on a particular
-     * socket.
+     * Create private thread to handle requests on a particular
+     * socket. Due to is possible connect to the server from multiples clients.
      * @return 
      * @throws IOException 
      */
 	private static class session extends Thread {
-    	
         private Socket socket;
         private int clientNumber;
-
+        /**
+         * Create a session for each client.
+         * @param socket
+         * @param clientNumber
+         */
 		public session(Socket socket, int clientNumber) {
             this.socket = socket;
             this.clientNumber = clientNumber;
             log("New connection with client# " + clientNumber + " at " + socket);
         }
-
         /**
          * Services this thread's client.
-         */
-		
+         */		
         public void run() {
             try {
 
@@ -121,13 +117,17 @@ private static IdentityDAO dao;
          */
         private void log(String message) {
         	System.out.println(message);
-        }
-     
+        }   
         /*
          * This method process the request. 
          */
-        
-		private String processRequest(String message) throws Exception{
+		/**
+		 * Process messages from the clients and launch command to be execute on the local dao.
+		 * @param message
+		 * @return
+		 * @throws Exception
+		 */
+        private String processRequest(String message) throws Exception{
         		
         	String[] command = message.split("::",-1);
         	
@@ -148,8 +148,10 @@ private static IdentityDAO dao;
                 	return "Invalid Command";
         	} 	
         }
-        // Authenticate method, check if user and password are the provided for the thread.
-		public String authenticate(String user_tmp, String password_tmp){
+        /**
+         * Authenticate method, check if user and password are the provided for the thread.
+		 */
+        public String authenticate(String user_tmp, String password_tmp){
 			// create local temp User object with the values passed as parameters
 			User user = new User("","","");
 			user.setUsername(user_tmp);
@@ -171,11 +173,23 @@ private static IdentityDAO dao;
 		 * The following methods calls the Orginals DAO Methods presented in the interface. 
 		 * 
 		 */
-		
+		/**
+		 * Create identity.
+		 * @param displayName
+		 * @param emailAddress
+		 * @param uid
+		 * @return
+		 */
 		public Identity createIdentityFromString(String displayName, String emailAddress, String uid){
 			Identity identity = new Identity(displayName, emailAddress, uid);
 			return identity;
 		}
+		/**
+		 * Search for and identity.
+		 * @param identity
+		 * @return
+		 * @throws Exception
+		 */
 		public String searchIdentity(Identity identity) throws Exception{
 			
 			String result="";
@@ -186,25 +200,53 @@ private static IdentityDAO dao;
 			}
 			return result;
 		}
+		/**
+		 * Create and identity.
+		 * @param displayName
+		 * @param emailAddress
+		 * @param uid
+		 * @return
+		 * @throws Exception
+		 */
 		public String createIdentity(String displayName, String emailAddress, String uid) throws Exception{
 			Identity identity = new Identity(displayName, emailAddress, uid);
 			
 			dao.create(identity);
 			return "OK";
 		}
+		/**
+		 * Update identity
+		 * @param displayName
+		 * @param emailAddress
+		 * @param uid
+		 * @return
+		 * @throws Exception
+		 */
 		public String updateIdentity(String displayName, String emailAddress, String uid) throws Exception{
 			Identity identity = new Identity(displayName, emailAddress, uid);
 			dao.update(identity);
 			return "OK";
 		}
+		/**
+		 * Delete identity.
+		 * @param displayName
+		 * @param emailAddress
+		 * @param uid
+		 * @return
+		 * @throws Exception
+		 */
 		public String deleteIdentity(String displayName, String emailAddress, String uid) throws Exception{
 			Identity identity = new Identity(displayName, emailAddress, uid);
 			dao.delete(identity);
 			return "OK";
 		}
+		/**
+		 * Read all identities
+		 * @return
+		 * @throws Exception
+		 */
 		public String readAllIdentities() throws Exception{
-			String result="";
-			
+			String result="";	
 			List<Identity> identities = dao.readAll();
 			// result = identities.toString();
 			
@@ -213,7 +255,6 @@ private static IdentityDAO dao;
 			}
 			return result;
 		}
-		 
     }
 }
 

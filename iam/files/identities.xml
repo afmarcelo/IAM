@@ -6,11 +6,6 @@
 		<property name="email">tbr@tbr.com</property>
 		<property name="guid">123456789</property>
 	</identity>
-	
-	<!-- this identity has two "siblings" the previous and the next identities -->
-	
-	
-	<!-- this is the "last child" of "identities" -->
 	<identity>
 		<!-- this is defining the properties of one identity -->
 		<!-- the name is defining the property name and the -->
@@ -20,10 +15,6 @@
 		<property name="guid">987456123</property>
 		<property name="birthDate">19/06/1988</property>
 	</identity>
-
-
-
-
 <identity>
 <property name="displayName">Francois Hollande</property>
 <property name="email">hollande@hotmail.com</property>
@@ -39,11 +30,11 @@
 <property name="email">cle@tbr.com</property>
 <property name="guid">987654123</property>
 </identity>
-<identity>
+<user>
 <property name="displayName">Marcelo Ardiles</property>
 <property name="email">marcelo@marcelo.com</property>
 <property name="guid">987654122</property>
 <property name="username">mardiles</property>
 <property name="password">marcelo01</property>
-</identity>
+</user>
 </identities>

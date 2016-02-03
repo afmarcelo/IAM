@@ -2,25 +2,21 @@ package fr.mfa.aim.tests.gui;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.UnknownHostException;
-import java.awt.Component;
-import java.awt.Container;
-
 import fr.mfa.aim.tests.gui.SpringUtilities;
 import fr.mfa.iam.services.networking.Client;
 
+/**
+ * This class represent the identity table interface.
+ * @author marcelo
+ */
 @SuppressWarnings("serial")
 public class IdentitiesTable extends JPanel implements TableModelListener, WindowFocusListener{
 
@@ -201,7 +197,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
 			client.disconnectFromServer();
 			refreshTable();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}	
 	}
@@ -220,11 +216,9 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
 			table.repaint();
 			model.fireTableDataChanged();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
 	/** 
      * Update the row filter regular expression from the expression in
      * the text box.
@@ -241,61 +235,42 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
     }
 
     class MyTableModel extends AbstractTableModel {
-        
- 
     	private String[] columnNames = {"DisplayName", "emailAddress", "UID" };
-        
     	private Object[][] data; 
-    	
-    	
         public String[] getColumnNames() {
 			return columnNames;
 		}
-
 		public void setColumnNames(String[] columnNames) {
 			this.columnNames = columnNames;
 		}
-
 		public Object[][] getData() {
 			return data;
 		}
-
 		public void setData(Object[][] data) {
 			this.data = data;
 		}
-
 		public int getColumnCount() {
             return columnNames.length;
         }
-
         public int getRowCount() {
             return data.length;
         }
-
         public String getColumnName(int col) {
             return columnNames[col];
         }
-
         public Object getValueAt(int row, int col) {
             return data[row][col];
         }
-
         /*
          * JTable uses this method to determine the default renderer/
          * editor for each cell.  If we didn't implement this method,
          * then the last column would contain text ("true"/"false"),
          * rather than a check box.
          */
-        
-        public Class getColumnClass(int c) {
+        @SuppressWarnings("unchecked")
+		public Class getColumnClass(int c) {
             return getValueAt(0, c).getClass();
         }
-
-        /*
-         * Don't need to implement this method unless your table's
-         * editable.
-         */
-        
         public boolean isCellEditable(int row, int col) {
             //Only 1st and 2nd column are editables.
             if (col >= 0) {
@@ -304,9 +279,7 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
                 return true;
             }
         }
-
     }
-
     /**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
@@ -327,37 +300,27 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
 
 		@Override
 		public void windowClosed(WindowEvent arg0) {
-			// TODO Auto-generated method stub
 			
 		}
-
 		@Override
 		public void windowClosing(WindowEvent arg0) {
-			// TODO Auto-generated method stub
 			
 		}
-
 		@Override
 		public void windowDeactivated(WindowEvent arg0) {
-			// TODO Auto-generated method stub
-			
+		
 		}
-
 		@Override
 		public void windowDeiconified(WindowEvent arg0) {
-			// TODO Auto-generated method stub
 			
 		}
-
 		@Override
 		public void windowIconified(WindowEvent arg0) {
-			// TODO Auto-generated method stub
 			
 		}
 
 		@Override
 		public void windowOpened(WindowEvent arg0) {
-			// TODO Auto-generated method stub
 			
 		}});
         //Create and set up the content pane.
@@ -386,7 +349,6 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
  		}
  		return data;
  	}
- 	
  	/**
  	 * Create a information window message box.
  	 * @param infoMessage
@@ -399,20 +361,18 @@ public class IdentitiesTable extends JPanel implements TableModelListener, Windo
 
 	@Override
 	public void tableChanged(TableModelEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void windowGainedFocus(WindowEvent arg0) {
-		// TODO Auto-generated method stub
+	
 		refreshTable();
 		
 	}
 
 	@Override
 	public void windowLostFocus(WindowEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
  	

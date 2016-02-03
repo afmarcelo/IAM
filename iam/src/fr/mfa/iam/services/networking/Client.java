@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.mfa.iam.services.networking;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +11,11 @@ import fr.mfa.aim.configuration.Configuration;
 
 /**
  * @author marcelo
- * Text Client to access to the iam Server.  
+ * This class implement the connection logic for connecting to the IamServer. All the configuration is loaded through the configuration class.
+ * The java properties starting with "cmd" represent the operations that the client can execute in the server. This operations are cmdCReate, cdmDelete, cmdReadAll and cmdAuth.
+ * In order to interact with the server a simple protocol was created
+ * After being authenticated, the client send a text message to the server which is divided by "::" being
+ * the first column for the command to be executed and the rests columns for the parameters of the desired command.
  */
 public class Client {
 	private String serverAddress;
@@ -38,14 +39,12 @@ public class Client {
     	serverAddress = config.getServerIP();
     	serverPort = config.getServerPort();
     }
-
     /**
      * Implements the connection logic connecting to the server, setting up streams, and
      * consuming the server methods.  In order to interact with the server a simple protocol was created
      * After being authenticated, the client send a text message to the server which is divided by "::" being
      * the first column for the command to be executed and the rests columns for the parameters of the desired command.
      */
-    
     public void connectToServer() throws IOException {
 
         // Make connection and initialize streams
@@ -54,24 +53,40 @@ public class Client {
         out = new PrintWriter(socket.getOutputStream(), true);
 
     }
-    
+    /**
+     * Close current connection.
+     * @throws IOException
+     */
     public void disconnectFromServer() throws IOException{
     	socket.close();
     }
-    
+    /**
+     * Send text message to the server.
+     * @param message
+     * @throws UnknownHostException
+     * @throws IOException
+     */
     public void sendMessage(String message) throws UnknownHostException, IOException{
     	out = new PrintWriter(socket.getOutputStream(), true);
     	out.println(message);
     }
-    
+    /**
+     * Read server messages.
+     * @return
+     * @throws IOException
+     */
     public String receiveMessage() throws IOException{
-    	
     	in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     	String message = in.readLine();
     	return message;
-    	
     }
-    
+    /**
+     * Send text command to the server.
+     * @param command
+     * @return
+     * @throws UnknownHostException
+     * @throws IOException
+     */
     public String sendCommand(String command) throws UnknownHostException, IOException{
     	sendMessage(command);
     	
@@ -81,9 +96,15 @@ public class Client {
     		}
     	return response;
     }
-    
+    /**
+     * Send create Identity command to the server and read server response.
+     * @param displayName
+     * @param emailAddress
+     * @param uid
+     * @return
+     * @throws IOException
+     */
     public String createIdentity(String displayName, String emailAddress, String uid) throws IOException{
-    	
     	String Command = cmdCreate+cmdSeparator+displayName+cmdSeparator+emailAddress+cmdSeparator+uid;  
     	sendMessage(Command);
     	String response = "";
@@ -92,9 +113,15 @@ public class Client {
     		}
     	return response;
     }
-    
+    /**
+     * Send delete Identity command to the server and read response.
+     * @param displayName
+     * @param emailAddress
+     * @param uid
+     * @return
+     * @throws IOException
+     */
     public String deleteIdentity(String displayName, String emailAddress, String uid) throws IOException{
-    	
     	String Command = cmdDelete+cmdSeparator+displayName+cmdSeparator+emailAddress+cmdSeparator+uid;  
     	sendMessage(Command);
     	String response = "";
@@ -103,9 +130,15 @@ public class Client {
     		}
     	return response;
     }
-    
+    /**
+     * Send update Identity Command to the server and read response.
+     * @param displayName
+     * @param emailAddress
+     * @param uid
+     * @return
+     * @throws IOException
+     */
     public String updateIdentity(String displayName, String emailAddress, String uid) throws IOException{
-    	
     	String Command = cmdUpdate+cmdSeparator+displayName+cmdSeparator+emailAddress+cmdSeparator+uid;  
     	sendMessage(Command);
     	String response = "";
@@ -114,7 +147,14 @@ public class Client {
     		}
     	return response;
     }
-    
+    /**
+     * Send Authentication request to the server, according to the local user and password received as paramenters. 
+     * And wait for a server response. 
+     * @param username
+     * @param password
+     * @return
+     * @throws IOException
+     */
     public String auth(String username, String password) throws IOException{
     	
     	String Command = cmdAuth+cmdSeparator+username+cmdSeparator+password;  
@@ -125,7 +165,11 @@ public class Client {
     		}
     	return response;
     }
-    
+    /**
+     * Send read all Identities to the server and wait for response, the response will contain all the identities.
+     * @return
+     * @throws IOException
+     */
     public String readAllIdentities() throws IOException{
     	
     	String Command = cmdReadAll;  
@@ -136,7 +180,11 @@ public class Client {
     		}
     	return response;
     }
-    
+    /**
+     * Infobox method used, during testing and developing for validate server responses.
+     * @param infoMessage
+     * @param titleBar
+     */
     public static void infoBox(String infoMessage, String titleBar)
     {
         JOptionPane.showMessageDialog(null, infoMessage, "InfoBox: " + titleBar, JOptionPane.INFORMATION_MESSAGE);

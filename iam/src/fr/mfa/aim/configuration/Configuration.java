@@ -1,25 +1,20 @@
-/**
- * 
- */
 package fr.mfa.aim.configuration;
-
 import java.io.IOException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import fr.mfa.aim.datamodel.Identity;
-
 /**
  * @author marcelo
  * This class has all the configuration required for the application.
+ * Server Ip Address and tcp port.
+ * Path to the Xml file and its working directory
+ * Configuration File from the configuration will be loaded.
  */
 public class Configuration {
 
@@ -30,10 +25,12 @@ public class Configuration {
 	private String ConfigFile="files/config.xml";
 	private Document doc;
 	
+	/**
+	 * Constructor of the class, it will read and load the configuration. 
+	 */
 	public Configuration(){
 		readConfig();
 	}
-	
 	/**
 	 * @return the serverIP
 	 */
@@ -82,7 +79,10 @@ public class Configuration {
 	public void setWorkingPath(String workingPath) {
 		WorkingPath = workingPath;
 	}
-	
+	/**
+	 * ReadConfig Method, open and read the configuration file, 
+	 * and finally stores de values in the configuration variables of the class.
+	 */
 	private void readConfig(){
 		
 		try {
@@ -93,12 +93,10 @@ public class Configuration {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			this.doc = db.parse(ConfigFile);
 			} catch (ParserConfigurationException | SAXException | IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		NodeList nodes = this.doc.getElementsByTagName("configuration");
-		int nodesSize = nodes.getLength();
 		Node node = nodes.item(0);
 		// cast the node into an Element, as we are sure it is an
 		// instance of Element

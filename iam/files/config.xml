@@ -1,6 +1,6 @@
 <configuration>
 	<property name="serverip" >127.0.0.1</property>
-	<property name="serverport">9898</property>
+	<property name="serverport">9899</property>
 	<property name="xmlfilepath">files/identities.xml</property>
 	<property name="workingpath">files/</property>
 </configuration>

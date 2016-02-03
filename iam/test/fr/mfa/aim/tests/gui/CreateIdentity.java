@@ -3,20 +3,15 @@ package fr.mfa.aim.tests.gui;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
-
-import fr.mfa.aim.tests.services.dao.file.IdentityFileDAO;
-import fr.mfa.iam.services.dao.IdentityDAO;
 import fr.mfa.iam.services.networking.Client;
-
-import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.beans.PropertyChangeEvent;
-import java.text.*;
  
-
+/**
+ * This class creates the create identity window interface.
+ * @author marcelo
+ *
+ */
 @SuppressWarnings("serial")
 public class CreateIdentity extends JPanel{
 
@@ -24,24 +19,19 @@ public class CreateIdentity extends JPanel{
     private JLabel lbDisplayName;
     private JLabel lbEmailAddress;
     private JLabel lbUid;
-    
     // messages 
     private String creationSuccesful="Your new identity has been create.";
     //Fields for data modification
     private JFormattedTextField txtDisplayName;
     private JFormattedTextField txtEmailAddress;
     private JFormattedTextField txtUid;
-    
+    // Buttons
     protected JButton btnCreate;
     protected JButton btnExit;
-    
     private boolean isDone=false;
     
 	public CreateIdentity(){
-    	super(new BorderLayout());
-        //setUpFormats();
-    
-           
+    	super(new BorderLayout());      
     	// Create Buttons
     	btnCreate = new JButton("Create Identity");
     	btnExit = new JButton("Exit");
@@ -83,17 +73,13 @@ public class CreateIdentity extends JPanel{
         btnCreate.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){createButtonPressed();}});
 		btnExit.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){exitButtonPressed();}});
     }
-	
 	// Getters and Setters
 	public boolean isDone() {
 		return isDone;
 	}
-
 	public void setDone(boolean isDone) {
 		this.isDone = isDone;
 	}
-
-	
     protected void exitButtonPressed() {
     	Container frame = btnExit.getParent();
         do 
@@ -101,9 +87,7 @@ public class CreateIdentity extends JPanel{
         while (!(frame instanceof JFrame));                                      
         ((JFrame) frame).dispose();
 	}
-
 	protected void createButtonPressed() {
-		
 		try {
 			String displayName = txtDisplayName.getText();
 			String emailAddress = txtEmailAddress.getText(); 
@@ -115,17 +99,12 @@ public class CreateIdentity extends JPanel{
 			infoBox(creationSuccesful,"");
 			isDone=true;
 			exitButtonPressed();
-		
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
-
 	/**
      * Create the GUI and show it.  For thread safety,
      * this method should be invoked from the
@@ -143,7 +122,6 @@ public class CreateIdentity extends JPanel{
         frame.pack();
         frame.setVisible(true);
     }
-
     /**
  	 * Create a information window message box.
  	 * @param infoMessage
