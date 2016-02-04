@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- The whole file is called a "Document" --><!-- "identities" is the Root Element --><identities>
 	<!-- identity is an element, "first child" of identities -->
-	<identity>
-		<property name="displayName">Thomas</property>
-		<property name="email">tbr@tbr.com</property>
-		<property name="guid">123456789</property>
-	</identity>
+	
 	<identity>
 		<!-- this is defining the properties of one identity -->
 		<!-- the name is defining the property name and the -->
@@ -25,17 +21,13 @@
 <property name="email">sarkozy@france.fr</property>
 <property name="guid">123123</property>
 </identity>
-<identity>
-<property name="displayName">Clémente</property>
-<property name="email">cle@tbr.com</property>
-<property name="guid">987654123</property>
-</identity>
+
 <user>
 <property name="displayName">Marcelo Ardiles</property>
 <property name="email">marcelo@marcelo.com</property>
 <property name="guid">987654122</property>
-<property name="username">mardiles</property>
-<property name="password">marcelo01</property>
+<property name="username">admin</property>
+<property name="password">epita01</property>
 </user>
 <identity>
 <property name="displayName">Kevan 123 </property>
@@ -46,5 +38,10 @@
 <property name="displayName">Marcelo </property>
 <property name="email">marcelo@hotmail.com</property>
 <property name="guid">sdfsdf</property>
+</identity>
+<identity>
+<property name="displayName">shomas</property>
+<property name="email">tbr@tbr.com</property>
+<property name="guid">123456789</property>
 </identity>
 </identities>
