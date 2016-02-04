@@ -20,7 +20,7 @@ public class CreateIdentity extends JPanel{
     private JLabel lbEmailAddress;
     private JLabel lbUid;
     // messages 
-    private String creationSuccesful="Your new identity has been create.";
+    private String creationSuccesful="Your new identity has been created.";
     //Fields for data modification
     private JFormattedTextField txtDisplayName;
     private JFormattedTextField txtEmailAddress;

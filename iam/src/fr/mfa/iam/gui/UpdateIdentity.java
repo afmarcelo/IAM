@@ -30,7 +30,7 @@ public class UpdateIdentity extends JPanel {
     private String txtDisplayNameContent ="";
     
     //messages
-    private String updateMessage="Your identity has been update.";
+    private String updateMessage="Your identity has been updated.";
     
     //Add buttons
     protected JButton btnUpdate;
